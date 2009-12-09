@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "spiral-core", "spiral-core\spiral-core.vcproj", "{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "basic", "spiral-core\samples\basic\basic.vcproj", "{8AF54173-6357-42AB-85E6-DE630A04C4F8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D} = {D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core-echoclient", "spiral-core\samples\echo\core-echoclient.vcproj", "{1465873B-77BE-4378-89D2-4A053BA33F54}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D} = {D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core-echoserver", "spiral-core\samples\echo\core-echoserver.vcproj", "{D2112855-6A35-4ABC-88C8-14C8F627728E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D} = {D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "core-chat", "spiral-core\samples\chat\core-chat.vcproj", "{A133B15E-9CD2-460D-89D2-5C228227A4C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D} = {D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}.Debug|Win32.Build.0 = Debug|Win32
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}.Release|Win32.ActiveCfg = Release|Win32
+		{D13EBFE7-B3A7-49EE-B171-5A55FAACB69D}.Release|Win32.Build.0 = Release|Win32
+		{8AF54173-6357-42AB-85E6-DE630A04C4F8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8AF54173-6357-42AB-85E6-DE630A04C4F8}.Debug|Win32.Build.0 = Debug|Win32
+		{8AF54173-6357-42AB-85E6-DE630A04C4F8}.Release|Win32.ActiveCfg = Release|Win32
+		{8AF54173-6357-42AB-85E6-DE630A04C4F8}.Release|Win32.Build.0 = Release|Win32
+		{1465873B-77BE-4378-89D2-4A053BA33F54}.Debug|Win32.ActiveCfg = Debug|Win32
+		{1465873B-77BE-4378-89D2-4A053BA33F54}.Debug|Win32.Build.0 = Debug|Win32
+		{1465873B-77BE-4378-89D2-4A053BA33F54}.Release|Win32.ActiveCfg = Release|Win32
+		{1465873B-77BE-4378-89D2-4A053BA33F54}.Release|Win32.Build.0 = Release|Win32
+		{D2112855-6A35-4ABC-88C8-14C8F627728E}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D2112855-6A35-4ABC-88C8-14C8F627728E}.Debug|Win32.Build.0 = Debug|Win32
+		{D2112855-6A35-4ABC-88C8-14C8F627728E}.Release|Win32.ActiveCfg = Release|Win32
+		{D2112855-6A35-4ABC-88C8-14C8F627728E}.Release|Win32.Build.0 = Release|Win32
+		{A133B15E-9CD2-460D-89D2-5C228227A4C3}.Debug|Win32.ActiveCfg = Debug|Win32
+		{A133B15E-9CD2-460D-89D2-5C228227A4C3}.Debug|Win32.Build.0 = Debug|Win32
+		{A133B15E-9CD2-460D-89D2-5C228227A4C3}.Release|Win32.ActiveCfg = Release|Win32
+		{A133B15E-9CD2-460D-89D2-5C228227A4C3}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

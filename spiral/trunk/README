@@ -1,0 +1,51 @@
+Twisted-C++ 9.0.0
+
+What is this?
+=============
+
+  Twisted-C++ is a port of Python Twisted, an event-based framework for 
+  internet applications which works on Python 2.3 through 2.6.
+
+Installing
+==========
+
+  Use CMake.
+
+Unit Tests
+==========
+
+
+  Not implemented yet
+
+
+Documentation and Support
+=========================
+
+  No documentation yet, but the aim is to be api-compatible with the Python
+  version.
+
+Copyright
+=========
+
+  All of the code in this distribution is Copyright (c) 2001-2008
+  Twisted Matrix Laboratories.
+
+  Twisted is made available under the MIT license. The included
+  LICENSE file describes this in detail.
+
+  C++ port by Rangel Reale.
+
+Warranty
+========
+
+  THIS SOFTWARE IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EITHER
+  EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+  OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.  THE ENTIRE RISK AS
+  TO THE USE OF THIS SOFTWARE IS WITH YOU.
+
+  IN NO EVENT WILL ANY COPYRIGHT HOLDER, OR ANY OTHER PARTY WHO MAY MODIFY
+  AND/OR REDISTRIBUTE THE LIBRARY, BE LIABLE TO YOU FOR ANY DAMAGES, EVEN IF
+  SUCH HOLDER OR OTHER PARTY HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH
+  DAMAGES.
+
+  Again, see the included LICENSE file for specific legal details.
