@@ -6,6 +6,8 @@
 #include "spiral/internet/interfaces/ITCPTransport.h"
 #include "spiral/internet/interfaces/IProtocol.h"
 #include "spiral/internet/interfaces/IProtocolFactory.h"
+#include "spiral/internet/interfaces/IConsumer.h"
+#include "spiral/internet/interfaces/IProducer.h"
 #include "spiral/internet/Error.h"
 #include "spiral/log/Logger.h"
 #include "spiral/log/Statement.h"
@@ -27,7 +29,7 @@ namespace bs=boost::system;
 
 using ba::ip::tcp;
 
-class Connection : public ITCPTransport, public SocketCloser
+class Connection : public ITCPTransport, public SocketCloser, public IProducer, public IConsumer
 {
 public:
 	Connection(IProtocol *protocol, BoostReactor *reactor);
@@ -42,6 +44,8 @@ public:
 	virtual void connectionLost(const Exception &reason);
 
 	void setProtocol(IProtocol *protocol) { protocol_.reset(protocol); }
+
+	void stopConsuming();
 
 	// ITransport
 	virtual void write(const char *data, size_t size);
@@ -62,6 +66,17 @@ public:
     virtual void setTcpKeepAlive(bool enabled);
 
 	virtual tcp::socket &getSocket() { return socket_; }
+
+	// IConsumer
+	virtual void registerProducer(IProducer *producer);
+	virtual void unregisterProducer();
+	//virtual void write(const char *data, size_t size);
+
+	// IProducer
+	virtual void stopProducing();
+
+	virtual void pauseProducing();
+	virtual void resumeProducing();
 protected:
 	virtual IProtocol *getProtocol() { return &*protocol_; }
 
@@ -105,8 +120,10 @@ private:
 	// write stuff
 	bool writing_, writeDisconnecting_, writeDisconnected_;
 	std::deque< boost::shared_ptr<Buffer> > writebuffers_;
+	int32_t writebufferssize_;
 	boost::shared_ptr<Buffer> writebuffer_;
 	IDelayedCall *writescheduled_;
+	int32_t writeBufferSize_;
 
 	void cbWrite(const bs::error_code& error, size_t bytes_transferred);
 	void resumeWriting();
@@ -119,6 +136,9 @@ private:
 	boost::shared_ptr<IProtocol> protocol_;
 
 	tcp::socket socket_;
+	IProducer *producer_;
+	bool producerPaused_, streamingProducer_;
+	
 
     bool connected_;
     bool disconnected_;

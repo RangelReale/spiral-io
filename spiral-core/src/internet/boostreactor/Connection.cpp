@@ -4,6 +4,8 @@
 #include "spiral/log/Logger.h"
 #include "spiral/log/Statement.h"
 #include "spiral/internet/interfaces/IHalfCloseableProtocol.h"
+#include "spiral/internet/interfaces/IPushProducer.h"
+#include "spiral/internet/interfaces/IPullProducer.h"
 
 namespace spiral {
 namespace internet {
@@ -16,7 +18,9 @@ Connection::Connection(IProtocol *protocol, BoostReactor *reactor) :
 	reading_(false), writing_(false), readbuffers_(), writebuffers_(),
 	readscheduled_(NULL), readScheduledInOS_(false), readbuffer_(),
 	writeDisconnecting_(false), writeDisconnected_(false), writescheduled_(NULL),
-	writebuffer_()
+	writebuffer_(), producerPaused_(false), streamingProducer_(false), producer_(NULL),
+	writebufferssize_(0),
+	writeBufferSize_(256) // 2**2**2**2
 {
 
 }
@@ -46,11 +50,12 @@ void Connection::connectionLost(const Exception &reason)
 {
 	setDisconnected(true);
 	setConnected(false);
-/*
-        if self.producer is not None:
-            self.producer.stopProducing()
-            self.producer = None
-*/
+
+	if (producer_)
+	{
+		producer_->stopProducing();
+		producer_=NULL;
+	}
 
 	stopReading();
 	stopWriting();
@@ -225,7 +230,7 @@ void Connection::startWriting()
 	writing_=true;
 	if (!writescheduled_)
 	{
-		writescheduled_=reactor_->callLater(0.5, boost::bind(&Connection::resumeWriting, this));
+		writescheduled_=reactor_->callLater(0.0, boost::bind(&Connection::resumeWriting, this));
 	}
 }
 
@@ -262,15 +267,6 @@ bool Connection::handleWrite(const bs::error_code& error, size_t bytes_transferr
 	if (disconnected_ || writeDisconnected_)
 		return false;
 
-/*
-	if (error == ba::error::eof || error == ba::error::connection_aborted || error == ba::error::connection_reset)
-	{
-		//self.reactor.removeActiveHandle(self)
-		writeConnectionLost(error::ConnectionDone(error.message()));
-		return false;
-	}
-	else 
-*/
 	if (error)
 	{
 		connectionLost(error::ConnectionLost(error.message()));
@@ -282,11 +278,14 @@ bool Connection::handleWrite(const bs::error_code& error, size_t bytes_transferr
 		if (writebuffers_.empty())
 		{
 			stopWriting();
-			//if self.producer is not None and ((not self.streamingProducer)
-            //                                      or self.producerPaused):
-			// TODO
-			//else
-			if (disconnecting_)
+			// If I've got a producer who is supposed to supply me with data
+			if (producer_ && (!streamingProducer_ || producerPaused_))
+			{
+				// tell them to supply some more.
+				producerPaused_=true;
+				dynamic_cast<IPullProducer*>(producer_)->resumeProducing();
+			}
+			else if (disconnecting_)
 				connectionLost(error::ConnectionDone());
 			else if (writeDisconnecting_)
 			{
@@ -306,6 +305,7 @@ void Connection::doWrite()
 	{
 		writebuffer_=writebuffers_.front();
 		writebuffers_.pop_front();
+		writebufferssize_-=writebuffer_->datasize;
 
 		ba::async_write(getSocket(), ba::buffer(writebuffer_->data, writebuffer_->datasize),
 			boost::bind(&Connection::cbWrite, this,
@@ -321,8 +321,17 @@ void Connection::write(const char *data, size_t size)
 	if (size>0)
 	{
 		writebuffers_.push_back(boost::shared_ptr<Buffer>(new Buffer(data, size)));
-		//if self.producer is not None:
-		// TODO?
+		writebufferssize_+=size;
+		if (producer_)
+		{
+			if (writebufferssize_ > writeBufferSize_)
+			{
+				producerPaused_=true;
+				IPushProducer *p=dynamic_cast<IPushProducer*>(producer_);
+				if (p)
+					p->pauseProducing();
+			}
+		}
 		startWriting();
 	}
 }
@@ -371,5 +380,50 @@ void Connection::setTcpKeepAlive(bool enabled)
 	ba::socket_base::keep_alive ka(enabled);
 	socket_.set_option(ka);
 }
+
+void Connection::registerProducer(IProducer *producer)
+{
+	if (producer_)
+		throw new RuntimeError("Cannot register producer, because previous producer was never unregistered");
+	if (disconnected_)
+		producer->stopProducing();
+	else
+	{
+		producer_=producer;
+		IPullProducer *p=dynamic_cast<IPullProducer*>(producer);
+		streamingProducer_=!p;
+		if (p)
+			p->resumeProducing();
+	}
+}
+
+void Connection::unregisterProducer()
+{
+	producer_=NULL;
+}
+
+void Connection::stopConsuming()
+{
+	unregisterProducer();
+	loseConnection();
+}
+
+void Connection::pauseProducing()
+{
+	stopReading();
+}
+
+void Connection::resumeProducing()
+{
+	assert(connected_ &&  !disconnecting_);
+	startReading();
+}
+
+void Connection::stopProducing()
+{
+	loseConnection();
+}
+
+
 
 }}} // spiral::internet::boostreactor
