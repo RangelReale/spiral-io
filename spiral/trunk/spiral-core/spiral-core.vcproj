@@ -215,7 +215,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\spiral\internet\interfaces\IConsumer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\spiral\internet\interfaces\IDelayedCall.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\spiral\internet\interfaces\IFinishableConsumer.h"
 					>
 				</File>
 				<File
@@ -227,11 +235,23 @@
 					>
 				</File>
 				<File
+					RelativePath=".\include\spiral\internet\interfaces\IProducer.h"
+					>
+				</File>
+				<File
 					RelativePath=".\include\spiral\internet\interfaces\IProtocol.h"
 					>
 				</File>
 				<File
 					RelativePath=".\include\spiral\internet\interfaces\IProtocolFactory.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\spiral\internet\interfaces\IPullProducer.h"
+					>
+				</File>
+				<File
+					RelativePath=".\include\spiral\internet\interfaces\IPushProducer.h"
 					>
 				</File>
 				<File
