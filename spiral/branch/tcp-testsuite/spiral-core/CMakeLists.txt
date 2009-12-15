@@ -38,5 +38,5 @@ add_library(spiral-core ${SOURCES})
 
 
 
-
+add_subdirectory(test)
 add_subdirectory(samples)
